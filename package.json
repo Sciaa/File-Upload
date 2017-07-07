@@ -10,13 +10,5 @@
     "express": "^4.13.3",
     "jquery": "^2.1.4",      
     "multer": "^1.0.3"
-  },
-  "scripts": {
-    "start": "node app.js"
-  },
-  "main": "app.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Sciaa/File-Upload.git"
   }  
 }
