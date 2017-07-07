@@ -1,43 +1,28 @@
-var express = require('express');
-var app = express();
-var fs = require("fs");
+'use strict';
 
-var bodyParser = require('body-parser');
-var multer  = require('multer');
+let express= require('express')
+    ,multer = require('multer')
+    ,upload = multer()
+    ,app = express()
 
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(multer({ dest: '/tmp/'}));
+    //Import imgProcessor module which we would implement later
+    ,imgProc = require('./imgProcessor');
 
-app.get('/index.htm', function (req, res) {
-   res.sendFile( __dirname + "/" + "index.htm" );
-})
+app.get('/', (req, res, next)=>{
+    res.sendFile(__dirname+'/index.htm');
+});
 
-app.post('/file_upload', function (req, res) {
-   console.log(req.files.file.name);
-   console.log(req.files.file.path);
-   console.log(req.files.file.type);
-   var file = __dirname + "/" + req.files.file.name;
-   
-   fs.readFile( req.files.file.path, function (err, data) {
-      fs.writeFile(file, data, function (err) {
-         if( err ){
-            console.log( err );
-            }else{
-               response = {
-                  message:'File uploaded successfully',
-                  filename:req.files.file.name
-               };
-            }
-         console.log( response );
-         res.end( JSON.stringify( response ) );
-      });
-   });
-})
+app.post('/uploadImg', upload.array('pics'), (req, res, next)=>{
 
-var server = app.listen(8081, function () {
-   var host = server.address().address
-   var port = server.address().port
-   
-   console.log("Example app listening at http://%s:%s", host, port)
-})
+    //Call the convertImgs method and pass the image files as its argument
+    imgProc.convertImgs(req.files).then((imageStringArray)=>{
+
+        //After all image processing finished, send the base64 image string to client
+        res.json(imageStringArray)
+
+    })
+});
+
+app.listen(8888, ()=>{
+    console.log('Hosted on Port 8888')
+});
