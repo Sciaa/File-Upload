@@ -6,7 +6,7 @@ let express= require('express')
     ,app = express()
 
     //Import imgProcessor module which we would implement later
-    ,imgProc = require('imgProcessor');
+    ,imgProc = require('./imgProcessor');
 
 app.get('/', (req, res, next)=>{
     res.sendFile(__dirname+'/index.htm');
